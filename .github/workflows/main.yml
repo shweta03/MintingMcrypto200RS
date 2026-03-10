@@ -1,0 +1,26 @@
+name: Daily Crypto RS to GSheets
+
+on:
+  schedule:
+    - cron: '30 5 * * *' # 11:00 AM IST
+  workflow_dispatch: # This gives you the manual "Run" button
+
+jobs:
+  update-sheet:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run Python script
+      env:
+        GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+      run: python rs_scanner.py
